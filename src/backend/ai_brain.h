@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 struct Brain {
   float weight_left;
@@ -13,6 +14,15 @@ struct Brain {
               float sensor_diag_right, float sensor_right);
   void mutate(float mutation_rate);
   Brain crossover(Brain partner);
+};
+
+struct EvolutionManager {
+  std::vector<Brain> population;
+  int current_generation = 0;
+
+  void init(int population_size);
+  void breedNextGeneration();
+  Brain &getBrain(int index);
 };
 
 float randomFloat(float range);

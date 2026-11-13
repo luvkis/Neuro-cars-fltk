@@ -38,3 +38,43 @@ Brain Brain::crossover(Brain partner) {
       (rand() % 2 == 0) ? this->weight_right : partner.weight_right;
   return child;
 }
+
+void EvolutionManager::init(int population_size) {
+  population.clear();
+
+  for (int i = 0; i < population_size; ++i) {
+    Brain intermediate;
+    intermediate.weight_left = randomFloat(1.0f);
+    intermediate.weight_diag_left = randomFloat(1.0f);
+    intermediate.weight_center = randomFloat(1.0f);
+    intermediate.weight_diag_right = randomFloat(1.0f);
+    intermediate.weight_right = randomFloat(1.0f);
+
+    population.push_back(intermediate);
+  };
+};
+
+void EvolutionManager::breedNextGeneration() {
+  std::sort(
+      population.begin(), population.end(),
+      [](const Brain &a, const Brain &b) { return a.fitness > b.fitness; });
+
+  // new population
+  std::vector<Brain> new_population;
+  for (int i = 0; i < 5; ++i) {
+    new_population.push_back(population[i]);
+  }
+  for (int i = 5; i < population.size(); i++) {
+    Brain owner_1 = population[rand() % 5];
+    Brain owner_2 = population[rand() % 5];
+
+    Brain new_car = owner_1.crossover(owner_2);
+    new_car.mutate(0.1f);
+    new_car.fitness = 0.0f;
+
+    new_population.push_back(new_car);
+  };
+  population = new_population;
+};
+
+Brain &EvolutionManager::getBrain(int index) { return population[index]; };
