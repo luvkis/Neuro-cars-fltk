@@ -1,4 +1,6 @@
 #pragma once
+#include <fstream>
+#include <string>
 #include <vector>
 
 struct Brain {
@@ -19,10 +21,14 @@ struct Brain {
 struct EvolutionManager {
   std::vector<Brain> population;
   int current_generation = 0;
+  int alive_cars_count = 0;
 
   void init(int population_size);
   void breedNextGeneration();
   Brain &getBrain(int index);
+  void carCrashed();
+  void saveBestBrain(std::string filename);
+  void loadBestBrain(std::string filename);
 };
 
 float randomFloat(float range);
