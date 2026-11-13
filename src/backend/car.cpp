@@ -12,8 +12,11 @@ Car::Car(double start_x, double start_y, double start_angle,
 }
 // функция определяет положение машинки.
 void Car::update() {
-  position.x += speed * std::cos(angle);
-  position.y += speed * std::sin(angle);
+  if (is_alive) {
+    position.x += speed * std::cos(angle);
+    position.y += speed * std::sin(angle);
+    ++score;
+  }
 }
 // функция определяет то, куда смотрит луч.
 std::vector<Point> Car::getSensorEndPoints() {
@@ -58,7 +61,7 @@ RayHit Car::getIntersection(Point A, Point B, Point C, Point D) {
     result.has_hit = true;
 
     result.hit_point.x = A.x + t * (B.x - A.x);
-    result.hit_point.x = A.y + t * (B.y - A.y);
+    result.hit_point.y = A.y + t * (B.y - A.y);
 
     double first_cath = result.hit_point.x - A.x;
     double second_cath = result.hit_point.y - A.y;
@@ -68,3 +71,5 @@ RayHit Car::getIntersection(Point A, Point B, Point C, Point D) {
 
   return result;
 }
+// функция поворачивает машинку, получая информацию от ИИ
+void Car::applySteering(double steer_value) { angle += steer_value; }

@@ -17,6 +17,8 @@ public:
   Point position;
   double angle;
   double speed;
+  bool is_alive = true;
+  double score = 0.0;
 
   Car(double start_x, double start_y, double start_angle, double start_speed);
 
@@ -25,4 +27,6 @@ public:
   std::vector<Point> getSensorEndPoints();
 
   RayHit getIntersection(Point A, Point B, Point C, Point D);
+
+  void applySteering(double steer_value);
 };
