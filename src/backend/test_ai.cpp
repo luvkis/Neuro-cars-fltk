@@ -8,11 +8,11 @@
 int main() {
   srand(time(0));
 
-  int POPULATION_SIZE = 100;
-  int MAX_GENERATION_SIZE = 50;
+  int POPULATION_SIZE = 10;
+  int MAX_GENERATION_SIZE = 1000;
   std::vector<Brain> population;
 
-  for (int i = 0; i < POPULATION_SIZE; i++) {
+  for (int i = 0; i < POPULATION_SIZE; ++i) {
     Brain intermediate;
     intermediate.weight_left = randomFloat(1.0f);
     intermediate.weight_center = randomFloat(1.0f);
