@@ -6,6 +6,11 @@ struct Point {
   double y;
 };
 
+struct Wall {
+  Point start;
+  Point end;
+};
+
 struct RayHit {
   bool has_hit;
   double distance;
@@ -19,6 +24,7 @@ public:
   double speed;
   bool is_alive = true;
   double score = 0.0;
+  double turn_speed = 0.05;
 
   Car(double start_x, double start_y, double start_angle, double start_speed);
 

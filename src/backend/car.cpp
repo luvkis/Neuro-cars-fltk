@@ -53,7 +53,7 @@ RayHit Car::getIntersection(Point A, Point B, Point C, Point D) {
   }
 
   double t =
-      ((A.x - C.x) * (C.y - D.y) - (A.y - C.y) * (C.x - D.y)) / determinant;
+      ((A.x - C.x) * (C.y - D.y) - (A.y - C.y) * (C.x - D.x)) / determinant;
   double u =
       ((A.x - C.x) * (A.y - B.y) - (A.y - C.y) * (A.x - B.x)) / determinant;
 
@@ -72,4 +72,6 @@ RayHit Car::getIntersection(Point A, Point B, Point C, Point D) {
   return result;
 }
 // функция поворачивает машинку, получая информацию от ИИ
-void Car::applySteering(double steer_value) { angle += steer_value; }
+void Car::applySteering(double steer_value) {
+  angle += steer_value * turn_speed;
+}
