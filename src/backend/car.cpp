@@ -11,17 +11,31 @@ Car::Car(double start_x, double start_y, double start_angle,
   speed = start_speed;
 }
 // функция определяет положение машинки.
-void Car::update() {
+void Car::update(const std::vector<Wall> &walls) {
   if (is_alive) {
+    Point old_position = position;
+
     position.x += speed * std::cos(angle);
     position.y += speed * std::sin(angle);
-    ++score;
+
+    for (size_t i = 0; i < walls.size(); ++i) {
+      RayHit hit =
+          getIntersection(old_position, position, walls[i].start, walls[i].end);
+      if (hit.has_hit) {
+        is_alive = false;
+        position = hit.hit_point;
+        break;
+      }
+    }
+
+    if (is_alive) {
+      ++score;
+    }
   }
 }
 // функция определяет то, куда смотрит луч.
 std::vector<Point> Car::getSensorEndPoints() {
   std::vector<Point> endpoints;
-  double sensor_length = 100.0;
 
   std::array<double, 5> ray_angles = {-1.5708, -0.7854, 0.0, 0.7854, 1.5708};
 
@@ -57,7 +71,7 @@ RayHit Car::getIntersection(Point A, Point B, Point C, Point D) {
   double u =
       ((A.x - C.x) * (A.y - B.y) - (A.y - C.y) * (A.x - B.x)) / determinant;
 
-  if (t > 0 && t < 1 && u > 0 && u < 1) {
+  if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
     result.has_hit = true;
 
     result.hit_point.x = A.x + t * (B.x - A.x);
@@ -73,5 +87,27 @@ RayHit Car::getIntersection(Point A, Point B, Point C, Point D) {
 }
 // функция поворачивает машинку, получая информацию от ИИ
 void Car::applySteering(double steer_value) {
-  angle += steer_value * turn_speed;
+  if (is_alive) {
+    angle += steer_value * turn_speed;
+  }
+}
+// функция находит минимальное расстояние до стены
+std::vector<double> Car::getSensorReadings(const std::vector<Wall> &walls) {
+  std::vector<Point> endpoints = getSensorEndPoints();
+  std::vector<double> readings;
+  for (size_t i = 0; i < endpoints.size(); ++i) {
+    double min_distance = sensor_length;
+
+    for (size_t j = 0; j < walls.size(); ++j) {
+      RayHit hit =
+          getIntersection(position, endpoints[i], walls[j].start, walls[j].end);
+      if (hit.has_hit && (hit.distance < min_distance))
+        min_distance = hit.distance;
+    }
+    if (min_distance < radius) {
+      is_alive = false;
+    }
+    readings.push_back(min_distance);
+  }
+  return readings;
 }
