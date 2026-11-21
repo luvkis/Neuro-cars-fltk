@@ -26,11 +26,11 @@ public:
   double score = 0.0;
   double turn_speed = 0.05;
   double sensor_length = 100.0;
-  double radius = 1;
+  double radius = 5;
 
   Car(double start_x, double start_y, double start_angle, double start_speed);
 
-  void update();
+  void update(const std::vector<Wall> &walls);
 
   std::vector<Point> getSensorEndPoints();
 
